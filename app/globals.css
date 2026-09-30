@@ -1,0 +1,150 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+/* The dashboard is always dark: shadcn's `dark:` variants follow the `.dark` class on <html>, not the OS setting. */
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* Self-hosted IBM Plex Sans Arabic (lib/fonts.ts); Latin first so digits never use the Arabic fallback. */
+  --font-sans: var(--font-plex-latin), var(--font-plex-arabic), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-plex-latin), var(--font-plex-arabic), ui-sans-serif, system-ui, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-aqua: var(--aqua);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/*
+ * Visual identity — the same dark palette as the website
+ * (keep in sync with frontend/styles/globals.css). Every text color keeps a
+ * contrast ratio of at least 4.5:1 on the surfaces it is used on; the bright
+ * primary always carries dark text.
+ */
+:root {
+  --background: #070b14;
+  --foreground: #f3f6fc;
+  --card: #0d1424;
+  --card-foreground: #f3f6fc;
+  --popover: #111a2d;
+  --popover-foreground: #f3f6fc;
+  --primary: #60a5fa;
+  --primary-foreground: #04101f;
+  --secondary: #141d31;
+  --secondary-foreground: #f3f6fc;
+  --muted: #141d31;
+  --muted-foreground: #8e9bb4;
+  --accent: #172440;
+  --accent-foreground: #f3f6fc;
+  --destructive: #f87171;
+  --border: #1d2941;
+  --input: #2b3a58;
+  --ring: #67e8f9;
+  --aqua: #67e8f9;
+  --chart-1: #60a5fa;
+  --chart-2: #67e8f9;
+  --chart-3: #818cf8;
+  --chart-4: #34d399;
+  --chart-5: #8e9bb4;
+  --radius: 0.75rem;
+  --sidebar: #04070d;
+  --sidebar-foreground: #c2cce0;
+  --sidebar-primary: #60a5fa;
+  --sidebar-primary-foreground: #04101f;
+  --sidebar-accent: #111a2d;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #141d31;
+  --sidebar-ring: #67e8f9;
+  --brand-gradient: linear-gradient(120deg, #67e8f9 0%, #60a5fa 48%, #818cf8 100%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    color-scheme: dark;
+    scrollbar-color: var(--input) var(--background);
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+  ::selection {
+    background: rgb(34 211 238 / 0.3);
+    color: var(--foreground);
+  }
+}
+
+/* Primary buttons wear the brand gradient (dark text keeps ≥ 6:1 on every stop). */
+@layer components {
+  [data-slot='button'][data-variant='default'] {
+    background-image: var(--brand-gradient);
+    box-shadow: 0 8px 24px -12px rgb(34 211 238 / 0.55);
+    font-weight: 600;
+  }
+
+  [data-slot='button'][data-variant='default']:hover {
+    filter: brightness(1.08);
+  }
+}
+
+/* The brand gradient as a fill. Always pair it with text-primary-foreground. */
+@utility bg-brand {
+  background-image: var(--brand-gradient);
+}
+
+/* Faint technical grid. Decorative only. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(148 163 184 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(148 163 184 / 0.07) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 0%, #000 35%, transparent 100%);
+}
+
+/* Aurora glow behind the login card. Decorative only. */
+@utility bg-aurora {
+  background:
+    radial-gradient(55% 60% at 85% -10%, rgb(37 99 235 / 0.34), transparent 70%),
+    radial-gradient(40% 45% at 10% 0%, rgb(34 211 238 / 0.16), transparent 70%),
+    radial-gradient(45% 50% at 50% 115%, rgb(99 102 241 / 0.16), transparent 70%);
+}
